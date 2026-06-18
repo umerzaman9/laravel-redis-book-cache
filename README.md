@@ -8,17 +8,6 @@ A high-performance Laravel 10 book registry application utilizing the **Cache-As
 ![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?style=flat&logo=redis&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
----
-
-## 📖 Table of Contents
-
-- [Architectural Workflow](#-architectural-workflow)
-- [Prerequisites](#-prerequisites)
-- [Installation & Setup](#-installation--setup)
-- [Verifying the Redis Caching Functionality](#-verifying-the-redis-caching-functionality)
-- [License](#-license)
-
----
 
 ## 🏗️ Architectural Workflow
 

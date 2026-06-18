@@ -39,8 +39,8 @@ Ensure you have the following installed on your local environment:
 ### 1. Clone & Install PHP Dependencies
 
 ```bash
-git clone <repository-url>
-cd redis-books-redis-cache
+git clone https://github.com/umerzaman9/laravel-redis-book-cache.git redis-books-cache
+cd redis-books-cache
 composer install
 ```
 

@@ -6,7 +6,32 @@
     },
     "devDependencies": {
         "axios": "^1.1.2",
-        "laravel-vite-plugin": "^0.7.2",
-        "vite": "^4.0.0"
+        "laravel-vite-plugin": "^3.1.0",
+        "vite": "^8.0.16"
+    },
+    "name": "redis-books-redis-cache",
+    "version": "1.0.0",
+    "description": "A high-performance Laravel 10 book registry application utilizing the **Cache-Aside pattern**. It uses **MySQL** as its persistent relational source of truth and **Redis Cloud** (via the `predis` client) as an ultra-fast in-memory caching layer to drastically reduce database lookup times.",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/umerzaman9/laravel-redis-book-cache.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/umerzaman9/laravel-redis-book-cache/issues"
+    },
+    "homepage": "https://github.com/umerzaman9/laravel-redis-book-cache#readme",
+    "dependencies": {
+        "express": "^5.2.1",
+        "predis": "^1.1.4",
+        "redis": "^6.0.0",
+        "socket.io": "^4.8.3"
     }
 }

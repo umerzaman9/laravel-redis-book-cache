@@ -34,7 +34,7 @@ class BookController extends Controller
     public function store(BookRequest $request)
     {
         // 1. Permanently save the book to MySQL
-        Book::create([
+        $book = Book::create([
             'title' => $request->input('title'),
             'author' => $request->input('author'),
             'blurb' => $request->input('blurb'),
@@ -44,6 +44,16 @@ class BookController extends Controller
         // 2. CRUCIAL: Clear the Redis cache!
         // Because a new book was added, old cached list is outdated.
         Cache::forget('all_books');
+
+        // 3. PUBLISH Real-Time Event to Redis
+        // We compile a neat array, convert it to a JSON string, and blast it out.
+        $payload = json_encode([
+            'title' => $book->title,
+            'author' => $book->author,
+            'time' => now()->format('H:i:s')
+        ]);
+
+        Redis::publish('book-actions', $payload);
 
         return redirect()->route('books.index');
     }

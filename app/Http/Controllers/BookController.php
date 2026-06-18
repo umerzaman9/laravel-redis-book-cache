@@ -3,59 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
+use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class BookController extends Controller
 {
-    // 1. Display the books on the homepage
+    // 1. Display the books (Checking Cache First!)
     public function index()
     {
-        // Fetch all items from the sorted set using -inf and +inf
-        // Redis::zrangebyscore returns an array of values (the book titles)
-        $titles = Redis::zrangebyscore('books', '-inf', '+inf');
-
-        $books = [];
-
-        foreach ($titles as $title) {
-            // If storing by title, the key looks like "books:The Hobbit"
-            $bookData = Redis::hgetall("books:$title");
-
-            if (!empty($bookData)) {
-                $books[] = $bookData;
-            }
-        }
+        // Cache::remember checks Redis for a key named 'all_books'.
+        // If it doesn't exist, it executes the function, stores the collection 
+        // in Redis for 600 seconds (10 mins), and returns the data.
+        $books = Cache::remember('all_books', 600, function () {
+            Log::info('Cache Miss! Querying MySQL Database...');
+            return Book::latest()->get();
+        });
 
         return view('welcome', compact('books'));
     }
 
-    // 2. Show the "Add New Book" view
     public function create()
     {
         return view('create');
     }
 
-    // 3. Handle the form submission (Server Action equivalent)
+    // 2. Save new book (Write to DB + Clear old Cache)
     public function store(BookRequest $request)
     {
-        $title = $request->input('title');
-        $id = now()->timestamp; // Clean integer timestamp
-
-        // Try adding the title to the Sorted Set (NX option means "Only add if it doesn't exist")
-        // Predis syntax for options passes them as an array or trailing arguments
-        $unique = Redis::zadd('books', $id, $title);
-
-        if (!$unique) {
-            return back()->withErrors(['title' => 'That book has already been added.']);
-        }
-
-        // Save the full book details into a Redis Hash
-        Redis::hmset("books:$title", [
-            'title' => $title,
+        // 1. Permanently save the book to MySQL
+        Book::create([
+            'title' => $request->input('title'),
             'author' => $request->input('author'),
             'blurb' => $request->input('blurb'),
             'rating' => $request->input('rating'),
         ]);
+
+        // 2. CRUCIAL: Clear the Redis cache!
+        // Because a new book was added, old cached list is outdated.
+        Cache::forget('all_books');
 
         return redirect()->route('books.index');
     }

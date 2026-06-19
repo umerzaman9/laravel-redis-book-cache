@@ -2,11 +2,8 @@
 
 namespace App\Repositories\Repository;
 
-use App\Http\Requests\BookRequest;
 use App\Models\Book;
 use App\Repositories\Interface\BookInterface;
-use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;

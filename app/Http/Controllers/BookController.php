@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
 use App\Repositories\Interface\BookInterface;
-use Error;
-use Exception;
-use Illuminate\Http\JsonResponse;
-use Yoeunes\Toastr\Facades\Toastr;
 
 class BookController extends Controller
 {

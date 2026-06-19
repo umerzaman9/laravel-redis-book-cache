@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::post('/register/send-otp', [AuthController::class, 'sendOtp'])->name('register.send-otp');
+Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend');
+Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.form');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 
+Route::middleware(['auth'])->group(function () {
     // Homepage - View all books
     Route::get('/', [BookController::class, 'index'])->name('books.index');
 

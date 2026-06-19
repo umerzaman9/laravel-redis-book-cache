@@ -47,6 +47,15 @@
                     </div>
 
                 </div>
+
+                <div class="text-center mb-2">
+                    <span class="badge rounded-pill bg-light text-dark border shadow-sm px-3 ">
+                        Test Credentials:
+                        <code class="ms-2 mb-0">test@example.com / password123</code>
+                    </span>
+                </div>
+
+
             </div>
         </div>
     </div>

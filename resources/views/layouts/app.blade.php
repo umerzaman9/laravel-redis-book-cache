@@ -17,12 +17,18 @@
             <a class="navbar-brand" href="#">Books Collection</a>
 
             @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-outline-light">
-                    Logout
-                </button>
-            </form>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-light">
+                    <strong>{{ auth()->user()->name ?? '' }}</strong>
+                </span>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-light">
+                        Logout
+                    </button>
+                </form>
+            </div>
             @endauth
         </div>
     </nav>

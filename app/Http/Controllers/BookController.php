@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
 use App\Repositories\Interface\BookInterface;
+use Error;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Yoeunes\Toastr\Facades\Toastr;
 
 class BookController extends Controller
 {
@@ -18,12 +21,14 @@ class BookController extends Controller
     public function index()
     {
         try {
-            return $this->bookRepo->getAllBooks();
+
+            $books = $this->bookRepo->getAllBooks();
+
+            return view('welcome', compact('books'));
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong.'
-            ], JsonResponse::HTTP_BAD_REQUEST);
+            toastr()->error('An error has occurred please try again later.');
+
+            return redirect()->back()->withInput();
         }
     }
 
@@ -35,12 +40,14 @@ class BookController extends Controller
     public function store(BookRequest $request)
     {
         try {
-            return $this->bookRepo->storeBook($request->validated());
+            $this->bookRepo->storeBook($request->validated());
+            toastr()->success('Book successfully added!');
+
+            return redirect()->route('books.index');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong.'
-            ], JsonResponse::HTTP_BAD_REQUEST);
+            toastr()->error('Unable to add this book at the moment. Please try again later.');
+
+            return redirect()->back()->withInput();
         }
     }
 }

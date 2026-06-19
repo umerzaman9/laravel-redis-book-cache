@@ -35,7 +35,7 @@ class BookController extends Controller
     public function store(BookRequest $request)
     {
         try {
-            return $this->bookRepo->storeBook($request);
+            return $this->bookRepo->storeBook($request->validated());
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

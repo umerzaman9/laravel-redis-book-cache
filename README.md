@@ -21,6 +21,32 @@ The application utilizes a dual-layer Redis architecture to optimize database pe
                                                                                    └─────────────┘
 ```
 
+## Redis Topics Implemented
+
+A checklist of the major Redis concepts implemented and configured across this stack:
+
+### 1. In-Memory Session Management
+
+- **What:** Switched `SESSION_DRIVER` from file-based storage to Redis Cloud.
+- **Why:** Eliminates slow hard drive reads/writes on every web request, speeding up core authentication operations into microseconds.
+
+### 2. Application Caching (Cache-Aside Pattern)
+
+- **What:** Created a manual cache key named `all_books` to store MySQL query results.
+- **Why:** Keeps heavy database queries off the MySQL engine by serving static book data straight out of RAM.
+
+### 3. Pub/Sub (Publish / Subscribe) Real-Time Messaging
+
+- **What:** Laravel `publish`es book creation events to a channel, which the Node.js engine `subscribes` to on Port 3000 to broadcast live alerts.
+- **Why:** Builds a high-performance, real-time communication bridge between the PHP backend and the WebSocket server.
+
+### 4. Sorted Sets (ZSET) Data Structures
+
+- **What:** Created the `books_leaderboard` key using `zadd` and `zrevrange` to track and rank books by their rating scores.
+- **Why:** Maintains a real-time, automatically sorted "Top Rated Books" leaderboard entirely in memory, without running heavy `ORDER BY` queries on the database.
+
+---
+
 ## 🛠️ System Requirements
 
 Ensure you have the following installed on your local environment:
@@ -69,6 +95,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 CACHE_DRIVER=redis
+SESSION_DRIVER=redis
 
 REDIS_CLIENT=predis
 REDIS_HOST=your-redis-host.db.redis.io
@@ -127,6 +154,12 @@ node server.js
 2. Open a completely separate browser tab (or an Incognito window) and go to the creation layout: `http://127.0.0.1:8000/create`. Place this window on the right side of your screen.
 3. Submit a new book form using the right window.
 4. **The magic:** the exact millisecond the form is submitted, a real-time Bootstrap toast notification will smoothly slide onto the screen in the left window, displaying the newly registered book's details — without requiring any manual browser tab reloads!
+
+### 3. Verifying the Sorted Set (ZSET) Leaderboard
+
+1. Rate a few books through the app so their scores get pushed into the `books_leaderboard` ZSET via `zadd`.
+2. Load the leaderboard view (or run `zrevrange books_leaderboard 0 -1 withscores` in `redis-cli`).
+3. Confirm the books appear ranked highest-to-lowest by rating, pulled straight from Redis with no `ORDER BY` query hitting MySQL.
 
 ---
 

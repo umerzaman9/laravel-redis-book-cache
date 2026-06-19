@@ -6,4 +6,5 @@ interface BookInterface
 {
     public function getAllBooks();
     public function storeBook($data);
+    public function getTopRatedBooks($limit = 5);
 }

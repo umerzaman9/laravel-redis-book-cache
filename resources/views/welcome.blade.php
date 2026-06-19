@@ -54,6 +54,25 @@
 
             </div>
         </div>
+
+        <div class="card shadow-sm border-1 my-3 mb-4">
+            <div class="card-header bg-warning text-dark font-weight-bold">
+                Top Rated Books Leaderboard
+            </div>
+            <ul class="list-group list-group-flush">
+                @forelse($topBooks as $index => $topBook)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>#{{ $index + 1 }}</strong> {{ $topBook->title }}
+                        <small class="text-muted">by {{ $topBook->author }}</small>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">⭐ {{ $topBook->rating }}</span>
+                </li>
+                @empty
+                <li class="list-group-item text-muted text-center">No ratings recorded yet!</li>
+                @endforelse
+            </ul>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

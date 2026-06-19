@@ -14,15 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware(['auth'])->group(function () {
+
+    // Homepage - View all books
+    Route::get('/', [BookController::class, 'index'])->name('books.index');
+
+    // Show the creation form
+    Route::get('/create', [BookController::class, 'create'])->name('books.create');
+
+    // Handle form submission
+    Route::post('/create', [BookController::class, 'store'])->name('books.store');
 });
-
-// Homepage - View all books
-Route::get('/', [BookController::class, 'index'])->name('books.index');
-
-// Show the creation form
-Route::get('/create', [BookController::class, 'create'])->name('books.create');
-
-// Handle form submission
-Route::post('/create', [BookController::class, 'store'])->name('books.store');

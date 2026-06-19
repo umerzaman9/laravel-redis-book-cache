@@ -19,8 +19,10 @@ class BookController extends Controller
         try {
 
             $books = $this->bookRepo->getAllBooks();
+            // Grab the top 5 highest-rated books from our new repo method
+            $topBooks = $this->bookRepo->getTopRatedBooks(5);
 
-            return view('welcome', compact('books'));
+            return view('welcome', compact('books', 'topBooks'));
         } catch (\Exception $e) {
             toastr()->error('An error has occurred please try again later.');
 
